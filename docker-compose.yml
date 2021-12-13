@@ -1,0 +1,34 @@
+version: '3.5'
+
+services:
+  test_postgres:
+    container_name: test_postgres
+    image: postgres:12
+    ports:
+      - 5432:5432
+    volumes:
+      - test-db-postgres-data:/var/lib/postgresql/data
+    restart: on-failure
+    environment:
+      - POSTGRES_PASSWORD=vintkor71084
+      - POSTGRES_USER=vintkor
+      - POSTGRES_DB=marketplace
+      - PGDATA=/var/lib/postgresql/data/dbdata
+      - POSTGRES_PORT=5432
+
+  db_backuper:
+    build: .
+    container_name: db_backuper
+    command: sh -c "python3 main.py"
+    volumes:
+      - ./app/:/app
+      - /var/run/docker.sock:/var/run/docker.sock
+    environment:
+      - DB_CONTAINER_NAME=test_postgres
+      - DB_USER_NAME=vintkor
+      - CRON_SCHEDULE=* * * * * #Every minute
+    depends_on:
+      - test_postgres
+
+volumes:
+  test-db-postgres-data:
