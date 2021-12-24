@@ -5,7 +5,7 @@ Backup PostgreSQL database to Yandex Object Storage, that has S3 compatible API.
 import datetime
 import os
 
-import boto3
+# import boto3
 
 
 # S3_BUCKET_NAME = os.getenv("S3_BUCKET_NAME")
@@ -68,4 +68,4 @@ if __name__ == "__main__":
     dumper = Dumper()
     dumper.say_hello()
     dumper.dump_database()
-    dumper.remove_temp_files()
+    # dumper.remove_temp_files()

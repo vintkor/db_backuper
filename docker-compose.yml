@@ -7,14 +7,20 @@ services:
     ports:
       - 5432:5432
     volumes:
-      - test-db-postgres-data:/var/lib/postgresql/data
-    restart: on-failure
+      - ./test-db-postgres-data:/var/lib/postgresql/data
     environment:
-      - POSTGRES_PASSWORD=vintkor71084
-      - POSTGRES_USER=vintkor
-      - POSTGRES_DB=marketplace
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_DB=${POSTGRES_DB}
       - PGDATA=/var/lib/postgresql/data/dbdata
-      - POSTGRES_PORT=5432
+      - POSTGRES_PORT=${POSTGRES_PORT}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
 
   db_backuper:
     build: .
@@ -24,9 +30,9 @@ services:
       - ./app/:/app
       - /var/run/docker.sock:/var/run/docker.sock
     environment:
-      - DB_CONTAINER_NAME=test_postgres
-      - DB_USER_NAME=vintkor
-      - CRON_SCHEDULE=* * * * * #Every minute
+      - DB_CONTAINER_NAME=${DB_CONTAINER_NAME}
+      - DB_USER_NAME=${POSTGRES_USER}
+      - CRON_SCHEDULE=${CRON_SCHEDULE}
     depends_on:
       - test_postgres
 

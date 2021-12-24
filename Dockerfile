@@ -7,7 +7,7 @@ ENV APP_DIR /app
 RUN mkdir ${APP_DIR}
 WORKDIR ${APP_DIR}
 
-RUN apk add --update python3 py-pip cron
+RUN apk add --update python3 py-pip
 
 ADD ./requirements.txt .
 RUN pip3 install --ignore-installed six && pip3 install -r requirements.txt
