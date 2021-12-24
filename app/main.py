@@ -1,5 +1,5 @@
 """
-Backup PostgreSQL database to Yandex Object Storage, that has S3 compatible API.
+Backup PostgreSQL database to AWS S3.
 """
 
 import datetime
